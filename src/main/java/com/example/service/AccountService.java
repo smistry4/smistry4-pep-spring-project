@@ -40,7 +40,7 @@ public class AccountService {
         return accountRepository.findByUsernameAndPassword(account.getUsername(), account.getPassword()).orElseThrow(() -> new AuthenticationException("Login request unsuccessful."));
     }
 
-    public Account getAccountById(int id) {
+    public Account getAccountById(int id) throws ClientErrorException {
         return accountRepository.findById(id).orElseThrow(() -> new ClientErrorException("Account with id " + id + " does not exist"));
     }
 

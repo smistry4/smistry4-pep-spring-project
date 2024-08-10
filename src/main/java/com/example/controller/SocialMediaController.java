@@ -1,12 +1,19 @@
 package com.example.controller;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
+import com.example.exception.ClientErrorException;
+import com.example.exception.ResourceAlreadyExistsException;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
 
@@ -29,10 +36,20 @@ public class SocialMediaController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<> registerUser(@RequestBody Account account) {
-        
+    public ResponseEntity<Account> registerUser(@RequestBody Account account) {
+        Account returnedAccount = accountService.addUserAccount(account);
+        return ResponseEntity.status(200).body(returnedAccount);
     }
 
     @PostMapping("login")
-    public ResponseEntity
+    public ResponseEntity<Account> loginUser(@RequestBody Account account) throws AuthenticationException {
+        Account returnedAccount = accountService.processUserLogin(account);
+        return ResponseEntity.status(200).body(returnedAccount);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public String handleUnauthorized(AuthenticationException ex) {
+        return ex.getMessage();
+    }
 }
