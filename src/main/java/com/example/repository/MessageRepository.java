@@ -11,5 +11,10 @@ import com.example.entity.Message;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Integer>{
 
+    /**
+     * This property expression is used to query messages by a particular user.
+     * @param postedBy
+     * @return a List of messages
+     */
     Optional<List<Message>> findByPostedBy(int postedBy);
 }
